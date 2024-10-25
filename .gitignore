@@ -2,6 +2,9 @@
 .Rhistory
 .Rapp.history
 
+# out files
+*.o*
+
 # Session Data files
 .RData
 .RDataTmp
@@ -47,3 +50,10 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# data files
+data/*
+*.vcf
+*.bcf
+*.gz
+*.samples
