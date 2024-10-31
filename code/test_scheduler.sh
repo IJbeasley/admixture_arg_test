@@ -42,4 +42,5 @@ conda activate admixture_arg_test_v3
 
 python3 code/tsinfer_practice1.py \
         -v "output/thous_genomes_samp/chr_20_5EUR.bcf" \
-        -o "output/sampleData/chr_20_5EUR.samples"
+        -o "output/sampleData/chr_20_5EUR.samples" \
+        -pop_assign "output/test_pop_assign.txt"
