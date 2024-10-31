@@ -31,13 +31,20 @@ module load CBI
 module load htslib/1.21
 module load bcftools/1.21
 
-# wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/release/20181203_biallelic_SNV/ALL.chr20.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
-
 chr_num=20
-save_filename=data/thus_genomes/thous_snv_bi_chr_$chr_num
+data_dir=data/thous_genomes
+out_dir=output/thous_genomes_bcf
+samp_dir=output/thous_genomes_samp
 
-echo "Get bcf file for5 european samples"
-bcftools view $save_filename.bcf -s HG00096,HG00097,HG00099,HG00100,HG00101 -O b -o output/chr_20_5EUR.bcf
+save_filename=thous_snv_bi_chr_$chr_num
 
-bcftools head output/chr_20_5EUR.bcf -n 5
+echo "Get bcf file for 5 european samples"
+bcftools view $out_dir/$save_filename.bcf -s HG00096,HG00097,HG00099,HG00100,HG00101 -O b -o $samp_dir/chr_20_5EUR.bcf
+
+echo "Remove variants fixed in this sample"
+bcftools  view $samp_dir/chr_20_5EUR.bcf -e 'AC==0 || AC==AN' -O b -o $samp_dir/chr_20_5EUR.bcf
+
+bcftools head $samp_dir/chr_20_5EUR.bcf -n 5
+#bcftools view -H $out_dir/$save_filename.bcf | wc -l
+bcftools view -H $samp_dir/chr_20_5EUR.bcf | wc -l 
 
