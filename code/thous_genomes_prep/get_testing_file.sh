@@ -27,27 +27,17 @@
 # Partition for the job (SGE equivalent is specifying the queue):
 #$ -q short.q
 
-# Check that the script is launched with qsub
-if [ "x$JOB_ID" == "x" ]; then
-   echo "You need to submit your job to the queuing system with qsub"
-   exit 1
-fi
-
 module load CBI
 module load htslib/1.21
-module load bcftools 
-
-cd data
+module load bcftools/1.21
 
 # wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/release/20181203_biallelic_SNV/ALL.chr20.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
 
-# now ... let's get the thousand genomes vcf for chromosome 20 
-wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/release/20181203_biallelic_SNV/ALL.chr20.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz 
+chr_num=20
+save_filename=data/thus_genomes/thous_snv_bi_chr_$chr_num
 
-gunzip ALL.chr20.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+echo "Get bcf file for5 european samples"
+bcftools view $save_filename.bcf -s HG00096,HG00097,HG00099,HG00100,HG00101 -O b -o output/chr_20_5EUR.bcf
 
-bcftools view ALL.chr20.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf -s HG00096 -O b -o chrom_20_HG00096.bcf
+bcftools head output/chr_20_5EUR.bcf -n 5
 
-bcftools head chrom_20_HG00096.bcf -n 10
-
-chrom_20_HG00096.bcf
