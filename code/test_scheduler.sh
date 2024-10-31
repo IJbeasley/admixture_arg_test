@@ -17,15 +17,14 @@
 #$ -N test_tsinfer
 
 # How much RAM per slot
-#$ -l mem_free=1G
+#$ -l mem_free=10G
 
 #$ -l scratch=2G      # job requires up to 2 GiB of local /scratch space
 
 # The maximum running time of the job in hours:mins:sec (converted to 10 minutes):
-#$ -l h_rt=0:10:00
+#$ -l h_rt=0:25:00
 
 # Partition for the job (SGE equivalent is specifying the queue):
-#$ -q short.q
 
 # Check that the script is launched with qsub
 if [ "x$JOB_ID" == "x" ]; then
@@ -33,8 +32,14 @@ if [ "x$JOB_ID" == "x" ]; then
    exit 1
 fi
 
-module load CBI
-module load miniforge3/24.7.1-0
-conda activate admixture_arg_env
+module load CBI miniforge3/24.7.1-0
+#module load Sali gcc/7.3.1
+conda activate admixture_arg_test_v3
 
-python3 code/ts_prep.py
+#conda create --name admixture_arg_test_v3 python=3.12
+#conda install bioconda:cyvcf2=0.31.1 
+#conda install conda-forge::tsinfer=0.3.3
+
+python3 code/tsinfer_practice1.py \
+        -v "output/thous_genomes_samp/chr_20_5EUR.bcf" \
+        -o "output/sampleData/chr_20_5EUR.samples"
