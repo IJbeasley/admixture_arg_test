@@ -1,6 +1,21 @@
 import cyvcf2
 import tsinfer
+import time as time
 
+
+# Input argument
+import argparse
+parser = argparse.ArgumentParser()
+
+# Required
+req_group = parser.add_argument_group(title='REQUIRED INPUT')
+req_group.add_argument('-vcf', '-v', help='VCF/BCF file', required=True)
+req_group.add_argument('-out', '-o', help='Output sampleData file', required=True)
+
+args = parser.parse_args()
+
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 def add_diploid_sites(vcf, samples):
     """
@@ -50,28 +65,42 @@ def chromosome_length(vcf):
     return vcf.seqlens[0]
 
 
-# URL for the VCF
-#url = "https://github.com/tskit-dev/tsinfer/raw/main/docs/_static/P_dom_chr24_phased.vcf.gz"
-filename = "ALL.chr21.shapeit2_integrated_snvindels_v2a_27022019.GRCh38.phased.vcf.gz"
+start_time = time.perf_counter()
 
-#vcf = cyvcf2.VCF(url)
-vcf = cyvcf2.VCF(filename)
+#in_filename = "output/thous_genomes_samp/chr_20_5EUR.bcf"
+#out_filename="output/sampleData/chr_20_5EUR.samples"
+
+vcf = cyvcf2.VCF(args.vcf)
+
 with tsinfer.SampleData(
-    path="ALL.chr21.shapeit2_integrated_snvindels_v2a_27022019.GRCh38.phased.samples", sequence_length=46709983
+    path=args.out
 ) as samples:
     add_diploid_sites(vcf, samples)
 
+
+end_time = time.perf_counter()
+print(f"\n Making the SampleData file took {end_time - start_time:.4f} seconds")
+
 print(
-    "Sample file created for {} samples ".format(samples.num_samples)
+    "\n Sample file created for {} samples ".format(samples.num_samples)
     + "({} individuals) ".format(samples.num_individuals)
     + "with {} variable sites.".format(samples.num_sites),
     flush=True,
 )
 
+
 # Do the inference
+
+start_time = time.perf_counter()
+
 ts = tsinfer.infer(samples)
 print(
     "Inferred tree sequence: {} trees over {} Mb ({} edges)".format(
         ts.num_trees, ts.sequence_length / 1e6, ts.num_edges
     )
 )
+
+end_time = time.perf_counter()
+print(f"\n Infering the ARG took {end_time - start_time:.4f} seconds")
+
+print("\n Done!")
