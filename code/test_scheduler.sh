@@ -40,7 +40,12 @@ conda activate admixture_arg_test_v3
 #conda install bioconda:cyvcf2=0.31.1 
 #conda install conda-forge::tsinfer=0.3.3
 
-python3 code/tsinfer_practice1.py \
-        -v "output/thous_genomes_samp/chr_20_5EUR.bcf" \
-        -o "output/sampleData/chr_20_5EUR.samples" \
-        -pop_assign "output/test_pop_assign.txt"
+# python3 code/ts_infer.py \
+#         -v "output/thous_genomes_samp/chr_20_5EUR.bcf" \
+#         -o "output/sampleData/chr_20_5EUR_undef.samples" #\
+     #   -pop_assign "output/test_pop_assign.txt"
+
+
+python3 code/ts_investigate.py
+     
+     

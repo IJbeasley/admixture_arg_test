@@ -74,7 +74,7 @@ def add_diploid_individuals(pop_assign, vcf, samplesData):
     
     if pop_assign == "undefined":
       
-       for individual in vcf.samplesData:
+       for individual in vcf.samples:
          
             samplesData.add_individual(ploidy = 2, 
                                    population = 0, 
@@ -192,6 +192,8 @@ print(
         ts.num_trees, ts.sequence_length / 1e6, ts.num_edges
     )
 )
+
+ts.dump(args.out + ".tree")
 
 end_time = time.perf_counter()
 print(f"\n Infering the ARG took {end_time - start_time:.4f} seconds")
