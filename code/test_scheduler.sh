@@ -46,6 +46,9 @@ conda activate admixture_arg_test_v3
      #   -pop_assign "output/test_pop_assign.txt"
 
 
-python3 code/ts_investigate.py
+python3 code/ts_investigate.py \
+        -t "output/sampleData/chr_20_5EUR.samples.tree" \
+        -pop_assign "output/test_pop_assign.txt"
+         
      
      
