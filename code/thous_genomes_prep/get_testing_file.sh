@@ -38,13 +38,34 @@ samp_dir=output/thous_genomes_samp
 
 save_filename=thous_snv_bi_chr_$chr_num
 
-echo "Get bcf file for 5 european samples"
-bcftools view $out_dir/$save_filename.bcf -s HG00096,HG00097,HG00099,HG00100,HG00101 -O b -o $samp_dir/chr_20_5EUR.bcf
+# echo "Get bcf file for 5 european samples"
+# bcftools view $out_dir/$save_filename.bcf -s HG00096,HG00097,HG00099,HG00100,HG00101 -O b -o $samp_dir/chr_20_5EUR.bcf
+# 
+# echo "Remove variants fixed in this sample"
+# bcftools  view $samp_dir/chr_20_5EUR.bcf -e 'AC==0 || AC==AN' -O b -o $samp_dir/chr_20_5EUR.bcf
+# 
+# bcftools head $samp_dir/chr_20_5EUR.bcf -n 5
+# #bcftools view -H $out_dir/$save_filename.bcf | wc -l
+# bcftools view -H $samp_dir/chr_20_5EUR.bcf | wc -l 
+
+echo "Get bcf file for GBR samples"
+bcftools view $out_dir/$save_filename.bcf -S output/thous_genomes/sample_assign/igsr-gbr.tsv -O b -o $samp_dir/chr_20_GBR.bcf --force-samples
 
 echo "Remove variants fixed in this sample"
-bcftools  view $samp_dir/chr_20_5EUR.bcf -e 'AC==0 || AC==AN' -O b -o $samp_dir/chr_20_5EUR.bcf
+bcftools  view $samp_dir/chr_20_GBR.bcf -e 'AC==0 || AC==AN' -O b -o $samp_dir/chr_20_GBR.bcf
 
-bcftools head $samp_dir/chr_20_5EUR.bcf -n 5
+bcftools head $samp_dir/chr_20_GBR.bcf -n 5
 #bcftools view -H $out_dir/$save_filename.bcf | wc -l
-bcftools view -H $samp_dir/chr_20_5EUR.bcf | wc -l 
+bcftools view -H $samp_dir/chr_20_GBR.bcf| wc -l 
 
+
+
+echo "Get bcf file for GBR samples"
+bcftools view $out_dir/$save_filename.bcf -S output/thous_genomes/sample_assign/igsr-yri.tsv -O b -o $samp_dir/chr_20_YRI.bcf --force-samples
+
+echo "Remove variants fixed in this sample"
+bcftools  view $samp_dir/chr_20_YRI.bcf -e 'AC==0 || AC==AN' -O b -o $samp_dir/chr_20_YRI.bcf
+
+bcftools head $samp_dir/chr_20_YRI.bcf -n 5
+#bcftools view -H $out_dir/$save_filename.bcf | wc -l
+bcftools view -H $samp_dir/chr_20_YRI.bcf| wc -l 
