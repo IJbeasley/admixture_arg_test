@@ -6,7 +6,7 @@ import sys
 ################# Argparse arguments ######################
 
 import argparse
-parser = argparse.ArgumentParser(description="Use tskit to investigate a single tree")
+parser = argparse.ArgumentParser(description="Use tskit GNN to investigate a single tree")
 
 # Optional inputs
 req_group = parser.add_argument_group(title='REQUIRED INPUT')
@@ -16,8 +16,10 @@ req_group.add_argument('-tree', '-t',
                        required=True
                        )
 req_group.add_argument('-pop_assign', 
-                       help = 'Text file assigning samples to populations',
-                       required=True
+                       help = 'Text file assigning samples to populations'
+                       'if not provided, then comparisions are made between individuals',
+                       default='undefined',
+                       required=False
                        )
 req_group.add_argument('-out_matrix', '-o', 
                        help = 'GNN output matrix (saved as csv)',
@@ -33,12 +35,6 @@ print("\n Load in tree + sample data")
 
 tree = ts.load(args.tree)
 
-print(type(tree))
-print(tree.metadata)
-print(tree.nodes_population)
-print(len(tree.nodes_population))
-print(tree.nodes_individual)
-
 print("Number of populations")
 print(tree.num_populations)
 
@@ -47,16 +43,26 @@ print(tree.num_nodes)
 
 print("Number of samples")
 print(tree.num_samples)
-
-print(tree.samples)
+# number of num_indivs
+num_indivs = int(tree.num_samples / 2)
 
 # pop_assign is a 2d-array
 # rows are individuals, 
 # columns are 1000 genomes sample IDs & population label
-pop_assign = np.loadtxt(args.pop_assign, 
-                              dtype='U10', 
-                              delimiter=','
-                              )
+
+if args.pop_assign !='undefined': 
+  
+   indiv_ids = range(num_indivs)
+   
+   pop_assign = np.column_stack((indiv_ids, indiv_ids))
+   # print(pop_assign)
+   # sys.exit()
+   
+else:
+   pop_assign = np.loadtxt(args.pop_assign, 
+                          dtype='U10', 
+                          delimiter=','
+                          )
                               
 # duplicate each row so that each row refers to a chromosome                            
 pop_assign = np.repeat(pop_assign, repeats=2, axis=0)      
@@ -68,16 +74,9 @@ row_numbers = np.arange(pop_assign.shape[0]).reshape(-1, 1)
 # Add the row numbers as a new column to pop_assign
 pop_assign = np.hstack((pop_assign, row_numbers.astype(int)))
 
-print(pop_assign[:5,])
-
 # get the all the population labels - and turn them into numbers
 all_populations = np.unique(pop_assign[:, 1])
 
-
-tree.genealogical_nearest_neighbours(focal = [1,2], 
-                                             sample_sets = [[3,4], [5]])
-
-#sys.exit()
 
 ############## Genealogical Nearest Neighbours ################
 
@@ -86,10 +85,18 @@ print("\n Assesing genealogical nearest neighbours")
 all_samples = np.unique(pop_assign[:,0])
 #range(0,len(tree.samples()))
 
+  
+gnn = tree.genealogical_nearest_neighbours(focal = [1], 
+                                             sample_sets = [[0]])
+print(gnn.shape)                                             
+print(gnn)   
+
+sys.exit()
 
 gnn_mat = np.empty((tree.num_samples, len(all_populations)))
 
-                   
+#print(pop_assign) 
+#sys.exit()
 pop_assign[:, 2] = pop_assign[:, 2].astype(int)
 
 for sample_id in all_samples: 
@@ -104,7 +111,11 @@ for sample_id in all_samples:
   print(focal_set)
   
   grouped_samples = {pop: [] for pop in all_populations}
-  compare_set = pop_assign[pop_assign[:, 0] != str(sample_id)]
+  if args.pop_assign != "undefined":
+    compare_set = pop_assign
+    print("Ok v1")
+  else: 
+    compare_set = pop_assign[pop_assign[:, 0] != str(sample_id)]
   
   # then form a list of lists 
   for thous_sample_id, population_id, tskit_id in compare_set:
@@ -118,12 +129,12 @@ for sample_id in all_samples:
                                              sample_sets = list_of_compare_samples)
   
   print("OK")
+  print(list_of_compare_samples)
   
-  print(gnn.shape)
- 
-  gnn_mat[focal_set, :] = gnn
   
-print(gnn_mat)
+  gnn_mat[focal_set, :] = gnn #np.mean(gnn,axis=0)
+  
+#print(gnn_mat)
 
 np.savetxt(args.out_matrix, 
            gnn_mat, 

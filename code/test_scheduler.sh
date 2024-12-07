@@ -40,15 +40,55 @@ conda activate admixture_arg_test_v3
 #conda install bioconda:cyvcf2=0.31.1 
 #conda install conda-forge::tsinfer=0.3.3
 
-# python3 code/ts_infer.py \
-#         -v "output/thous_genomes_samp/chr_20_5EUR.bcf" \
-#         -o "output/sampleData/chr_20_5EUR_undef.samples" #\
-     #   -pop_assign "output/test_pop_assign.txt"
 
+python3 code/ts_investigate_gnn.py  \
+-tree "output/sampleData/chr_20_GBR_all_GBR.samples.tree"\
+-pop_assign "output/randomised_pop_assigns/chr_20_GBR_0.1_NR.txt"
+
+python3 code/ts_investigate_gnn.py  \
+-tree "output/sampleData/chr_20_5EUR.samples.tree"\
+-pop_assign "output/randomised_pop_assigns/test_pop_assign.txt"
+# 
+# python3 code/ts_infer.py \
+#         -v "output/thous_genomes_samp/chr_20_GBR.bcf" \
+#         -o "output/sampleData/chr_20_GBR_all_GBR.samples" \
+#         -pop_assign   "output/randomised_pop_assigns/chr_20_GBR_all_GBR.txt"
+# 
+# 
+# python3 code/ts_infer.py \
+#         -v "output/thous_genomes_samp/chr_20_GBR.bcf" \
+#         -o "output/sampleData/chr_20_GBR_0.1_NR.samples" \
+#         -pop_assign   "output/randomised_pop_assigns/chr_20_GBR_0.1_NR.txt"
+#         
+# python3 code/ts_infer.py \
+#         -v "output/thous_genomes_samp/chr_20_GBR.bcf" \
+#         -o "output/sampleData/chr_20_GBR_0.25_NR.samples" \
+#         -pop_assign   "output/randomised_pop_assigns/chr_20_GBR_0.25_NR.txt"
+# 
+#         
+# python3 code/ts_infer.py \
+#         -v "output/thous_genomes_samp/chr_20_GBR.bcf" \
+#         -o "output/sampleData/chr_20_GBR_0.5_NR.samples" \
+#         -pop_assign   "output/randomised_pop_assigns/chr_20_GBR_0.5_NR.txt"
+        
+######################
 
 python3 code/ts_investigate.py \
-        -t "output/sampleData/chr_20_5EUR.samples.tree" \
-        -pop_assign "output/test_pop_assign.txt"
+        -tree "output/sampleData/chr_20_GBR_0.1_NR.samples.tree" \
+        -tree2 "output/sampleData/chr_20_GBR_0.1_NR.samples.tree" \
+        -pop_assign "output/randomised_pop_assigns/chr_20_GBR_0.1_NR.txt"
+
+
+code/ts_investigate_gnn.py \
+        -tree "output/sampleData/chr_20_GBR_0.1_NR.samples.tree" \
+         -pop_assign "output/randomised_pop_assigns/chr_20_GBR_0.1_NR.txt"
+
+python3 code/ts_investigate.py \
+        -tree "output/sampleData/chr_20_GBR_all_GBR.samples.tree" \
+        -tree2 "output/sampleData/chr_20_GBR_0.1_NR.samples.tree" \
+        -pop_assign "output/randomised_pop_assigns/chr_20_GBR_0.1_NR.txt"
          
-     
+# python3 code/ts_investigate.py \
+#         -t "output/sampleData/chr_20_5EUR.samples.tree" \
+#         -pop_assign "output/test_pop_assign.txt"     
      
