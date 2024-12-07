@@ -51,9 +51,13 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 
+# renv package manager storage information
+renv/
+
 # data files
 data/*
 output/*
+*.csv
 *.vcf
 *.bcf
 *.gz
