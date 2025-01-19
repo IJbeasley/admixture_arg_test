@@ -33,7 +33,6 @@ if [ "x$JOB_ID" == "x" ]; then
 fi
 
 module load CBI miniforge3/24.7.1-0
-#module load Sali gcc/7.3.1
 conda activate admixture_arg_test_v3
 
 #conda create --name admixture_arg_test_v3 python=3.12
@@ -42,12 +41,28 @@ conda activate admixture_arg_test_v3
 
 
 python3 code/ts_investigate_gnn.py  \
--tree "output/sampleData/chr_20_GBR_all_GBR.samples.tree"\
--pop_assign "output/randomised_pop_assigns/chr_20_GBR_0.1_NR.txt"
+-tree "output/sampleData/chr_20_GBR_all_GBR.samples.tree" \
+-out_matrix "all_GBR_samples_undef.csv" 
+
 
 python3 code/ts_investigate_gnn.py  \
--tree "output/sampleData/chr_20_5EUR.samples.tree"\
--pop_assign "output/randomised_pop_assigns/test_pop_assign.txt"
+-tree "output/sampleData/chr_20_GBR_0.5_NR.samples.tree" \
+-out_matrix "GBR_0.5_NR.samples_undef.csv" 
+
+python3 code/ts_investigate_gnn.py  \
+-tree "output/sampleData/chr_20_GBR_0.25_NR.samples.tree" \
+-out_matrix "GBR_0.25_NR.samples_undef.csv" 
+
+python3 code/ts_investigate_gnn.py  \
+-tree "output/sampleData/chr_20_GBR_0.1_NR.samples.tree" \
+-out_matrix "GBR_0.1_NR.samples_undef.csv" 
+
+#\
+#-pop_assign "output/randomised_pop_assigns/chr_20_GBR_0.1_NR.txt"
+
+python3 code/ts_investigate_gnn.py \
+-tree "output/sampleData/chr_20_5EUR.samples.tree"
+#-pop_assign "output/test_pop_assign.txt"
 # 
 # python3 code/ts_infer.py \
 #         -v "output/thous_genomes_samp/chr_20_GBR.bcf" \
@@ -73,10 +88,10 @@ python3 code/ts_investigate_gnn.py  \
         
 ######################
 
-python3 code/ts_investigate.py \
-        -tree "output/sampleData/chr_20_GBR_0.1_NR.samples.tree" \
-        -tree2 "output/sampleData/chr_20_GBR_0.1_NR.samples.tree" \
-        -pop_assign "output/randomised_pop_assigns/chr_20_GBR_0.1_NR.txt"
+python3 code/ts_investigate_gnn.py \
+        -tree "output/sampleData/chr_20_GBR_all_GBR.samples.tree" \
+        -pop_assign "output/randomised_pop_assigns/chr_20_GBR_0.1_NR.txt" \
+        -out_matrix "GGBR_0.1_matrix.csv"
 
 
 code/ts_investigate_gnn.py \
